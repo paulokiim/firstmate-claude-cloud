@@ -42,6 +42,7 @@ expect "veredito reprovado nega" deny "$tmp/app" feat
 verdict "$sha" aprovado
 expect "veredito aprovado permite" allow "$tmp/app" feat
 expect "head owner:branch permite" allow "$tmp/app" acme:feat
+expect "head de fork nega" deny "$tmp/app" outrofork:feat
 expect "sessão no diretório pai permite" allow "$tmp" feat
 verdict "$sha" dispensado
 expect "dispensado permite" allow "$tmp/app" feat
