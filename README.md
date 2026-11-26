@@ -36,7 +36,7 @@ Cada sessão nova baixa a versão atual da `main`. Não existe configuração da
 
 Se o clone ou o setup falhar, o setup script para com erro e a sessão avisa que o setup falhou.
 
-No computador pessoal dá para rodar o mesmo `setup.sh` uma vez. Um `~/.claude/CLAUDE.md` diferente que já exista é salvo como `CLAUDE.md.bak`.
+No computador pessoal dá para rodar o mesmo `setup.sh` uma vez. Um `~/.claude/CLAUDE.md` ou um agente em `~/.claude/agents/` com o mesmo nome de um deste repositório, se for diferente, é salvo ao lado com `.bak` (por exemplo `CLAUDE.md.bak`).
 
 ## Testes
 
