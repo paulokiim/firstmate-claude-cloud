@@ -16,7 +16,12 @@ input=$(cat)
 owner=$(jq -r '.tool_input.owner // empty' <<<"$input")
 repo=$(jq -r '.tool_input.repo // empty' <<<"$input")
 head=$(jq -r '.tool_input.head // empty' <<<"$input")
-head=${head##*:}
+if [[ "$head" == *:* ]]; then
+  head_owner=${head%%:*}
+  [ "${head_owner,,}" = "${owner,,}" ] \
+    || deny "no-mistakes: PR a partir de fork ($head) não é suportada; o veredito só vale para branches de $owner/$repo."
+  head=${head#*:}
+fi
 
 [ -n "$owner" ] && [ -n "$repo" ] && [ -n "$head" ] || deny "no-mistakes: não consegui ler owner, repo e head da chamada de criação de PR."
 
