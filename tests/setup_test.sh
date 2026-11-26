@@ -14,12 +14,32 @@ settings="$home/.claude/settings.json"
 mkdir -p "$home/.claude"
 echo '{"model":"x","hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"/outro.sh"}]}]}}' > "$settings"
 echo "pessoal" > "$home/.claude/CLAUDE.md"
+# Um Explore pessoal (mesmo nome de um agente do repo) e um agente só do usuário.
+mkdir -p "$home/.claude/agents"
+echo "explore pessoal" > "$home/.claude/agents/Explore.md"
+echo "meu agente" > "$home/.claude/agents/meu.md"
 
 HOME="$home" bash "$repo_dir/setup.sh" >/dev/null
 HOME="$home" bash "$repo_dir/setup.sh" >/dev/null
 
 cmp -s "$repo_dir/claude/CLAUDE.md" "$home/.claude/CLAUDE.md" || fail "CLAUDE.md não foi instalado"
 [ "$(cat "$home/.claude/CLAUDE.md.bak")" = "pessoal" ] || fail "CLAUDE.md anterior não foi preservado"
+# Roteamento de modelos: cada agente instalado com o modelo da tabela do Paulo.
+model_of() { sed -n '2,/^---$/s/^model: *//p' "$1"; }
+for pair in ui-designer:fable architect:opus implementer:sonnet Explore:sonnet; do
+  name="${pair%%:*}" want="${pair#*:}"
+  f="$home/.claude/agents/$name.md"
+  [ -f "$f" ] || fail "agente $name não instalado"
+  [ "$(sed -n '2,/^---$/s/^name: *//p' "$f")" = "$name" ] || fail "agente $name com name errado no frontmatter"
+  [ "$(model_of "$f")" = "$want" ] || fail "agente $name com modelo '$(model_of "$f")', esperado $want"
+done
+[ "$(find "$home/.claude/agents" -name '*.md' | wc -l)" = 5 ] || fail "agentes instalados a mais ou a menos"
+[ "$(cat "$home/.claude/agents/Explore.md.bak")" = "explore pessoal" ] || fail "Explore anterior não foi preservado"
+[ "$(cat "$home/.claude/agents/meu.md")" = "meu agente" ] || fail "agente do usuário foi alterado"
+explore_tools="$(sed -n '2,/^---$/s/^tools: *//p' "$home/.claude/agents/Explore.md")"
+case ", $explore_tools," in *", Edit,"*|*", Write,"*|*", NotebookEdit,"*) fail "Explore não é só leitura: $explore_tools" ;; esac
+[ -n "$explore_tools" ] || fail "Explore sem lista de ferramentas herdaria as de escrita"
+
 [ -x "$hook" ] || fail "hook não instalado ou sem permissão de execução"
 cmp -s "$repo_dir/claude/hooks/require-no-mistakes.sh" "$hook" || fail "hook diferente do repositório"
 

@@ -14,6 +14,17 @@
   If you see one, even if it is not caused by what you are working on right now, still get it fixed.
 - Before using "dynamic workflows", "ultra code" or any harness feature that immediately spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
 
+## Model routing
+
+When you delegate, pick the subagent whose model fits the phase (definitions in `~/.claude/agents/`):
+- UI/UX design, screens, mockups: `ui-designer` (Fable 5.2)
+- Architecture, system design, written plans: `architect` (Opus 5.5)
+- Implementation of an agreed change: `implementer` (Sonnet 5.5)
+- Read-only exploration: `Explore` (Sonnet 5.5)
+
+Every other subagent call (the no-mistakes verifier, `general-purpose`, `Plan`) passes `model: opus`.
+A model the user names for a task wins over this table.
+
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.
