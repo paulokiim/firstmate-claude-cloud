@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Instala o setup de usuário do Claude Code: regras globais (~/.claude/CLAUDE.md)
-# e o hook que recusa PR sem veredito aprovado do no-mistakes.
+# Instala o setup de usuário do Claude Code: regras globais (~/.claude/CLAUDE.md),
+# os subagentes do roteamento de modelos (~/.claude/agents/) e o hook que recusa
+# PR sem veredito aprovado do no-mistakes.
 # Pode rodar várias vezes; o resultado é sempre o mesmo.
 set -euo pipefail
 
@@ -11,13 +12,23 @@ settings="$claude_dir/settings.json"
 
 command -v jq >/dev/null || { echo "setup.sh: jq não encontrado; instale jq e rode de novo" >&2; exit 1; }
 
-mkdir -p "$claude_dir/hooks"
+mkdir -p "$claude_dir/hooks" "$claude_dir/agents"
 
-# Um CLAUDE.md diferente que já exista (ex.: num computador pessoal) fica salvo ao lado.
-if [ -f "$claude_dir/CLAUDE.md" ] && ! cmp -s "$repo_dir/claude/CLAUDE.md" "$claude_dir/CLAUDE.md"; then
-  cp "$claude_dir/CLAUDE.md" "$claude_dir/CLAUDE.md.bak"
-fi
-install -m 644 "$repo_dir/claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
+# Instala um arquivo do repositório. Um arquivo diferente que já exista no destino
+# (ex.: num computador pessoal) fica salvo ao lado como .bak.
+install_file() {
+  local src="$1" dest="$2"
+  if [ -f "$dest" ] && ! cmp -s "$src" "$dest"; then
+    cp "$dest" "$dest.bak"
+  fi
+  install -m 644 "$src" "$dest"
+}
+
+install_file "$repo_dir/claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
+# Só os agentes com estes nomes; outros agentes do usuário ficam como estão.
+for agent in "$repo_dir"/claude/agents/*.md; do
+  install_file "$agent" "$claude_dir/agents/$(basename "$agent")"
+done
 install -m 755 "$repo_dir/claude/hooks/require-no-mistakes.sh" "$hook"
 
 # Registra o hook uma vez só, preservando o resto do settings.json:
@@ -41,4 +52,4 @@ if ! jq --arg cmd "$hook" '
 fi
 mv "$tmp" "$settings"
 
-echo "setup.sh: CLAUDE.md e hook do no-mistakes instalados em $claude_dir"
+echo "setup.sh: CLAUDE.md, agentes e hook do no-mistakes instalados em $claude_dir"
