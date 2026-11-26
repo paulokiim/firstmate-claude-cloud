@@ -1,0 +1,14 @@
+# Repositório só de shell: setup.sh, o hook do no-mistakes e seus testes.
+commands:
+  prepare: command -v shellcheck >/dev/null || pip install -q shellcheck-py
+  test: bash tests/setup_test.sh && bash tests/require-no-mistakes.test.sh
+  lint: shellcheck setup.sh tests/*.sh claude/hooks/*.sh
+test:
+  instructions: |
+    Os dois testes rodam sem rede e sem GitHub, cada um num diretório
+    temporário. setup_test.sh usa um $HOME temporário; nunca rode o
+    setup.sh com o $HOME real durante a validação.
+document:
+  instructions: |
+    O README documenta a linha de bootstrap, o que é instalado e como
+    testar. Mudança em qualquer um desses pontos precisa aparecer lá.

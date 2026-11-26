@@ -14,7 +14,7 @@ git config --global url."$tmp/remote.git".insteadOf https://github.com/acme/app
 
 git init -q --bare "$tmp/remote.git"
 git init -q "$tmp/app"
-cd "$tmp/app"
+cd "$tmp/app" || exit 1
 git remote add origin https://github.com/acme/app
 git commit -q --allow-empty -m base && git push -q origin main
 git checkout -q -b feat && git commit -q --allow-empty -m feat
