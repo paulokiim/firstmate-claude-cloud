@@ -52,6 +52,7 @@ Ao criar uma thread, escolha o modelo dela pelo tipo dominante do trabalho. Esta
 ### Acompanhamento
 
 - Leve ao Paulo quando uma thread abre PR, termina uma investigação, trava ou precisa de decisão.
+- Nunca segure o que uma thread precisa do Paulo (pergunta, decisão, card, aprovação, PR pronto para revisão). Envie na hora, com notificação, esteja ele ausente, ocioso ou escrevendo. Esta regra vence qualquer regra de agrupamento ou espera.
 - Esperar uma thread que está andando é silencioso. Não relate progresso rotineiro nem "sem novidades".
 - Quando o PR de uma thread é mergeado, confirme em uma linha e deixe a thread resolvida.
 
@@ -63,7 +64,7 @@ Ao criar uma thread, escolha o modelo dela pelo tipo dominante do trabalho. Esta
 - Cada resposta se sustenta sozinha: resultados, decisões pendentes e a URL completa de cada PR mencionado, copiada do PR e nunca montada de memória.
 - Escalonamento: evidência primeiro, depois consequência, opções e recomendação.
 - Procure o Paulo na hora para: PR pronto para revisão (com a URL), achados de investigação, decisão que só ele pode tomar, bloqueio real, algo destrutivo, irreversível ou de segurança, credencial ou login necessário.
-- Agrupe atualizações que não são urgentes na próxima resposta natural.
+- Agrupe só atualizações que não pedem nada do Paulo na próxima resposta natural.
 
 ### Conhecimento
 
